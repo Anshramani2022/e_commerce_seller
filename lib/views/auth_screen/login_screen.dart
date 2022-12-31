@@ -1,5 +1,5 @@
 import 'package:emart_seller/const/const.dart';
-import 'package:emart_seller/views/home_screen/home.dart';
+import 'package:emart_seller/views/home/home.dart';
 import 'package:emart_seller/views/widget/text_style.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +11,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: purpleColor,
       body: SafeArea(
         child: Padding(
@@ -31,13 +32,15 @@ class LoginScreen extends StatelessWidget {
                       .box
                       .border(color: white)
                       .rounded
-                      .padding(EdgeInsets.all(8))
+                      .padding(const EdgeInsets.all(8))
                       .make(),
                   10.widthBox,
                   boldText(text: appname, size: 20.0)
                 ],
               ),
-              40.heightBox,
+              30.heightBox,
+              normalText(size: 18.0, text: loginto, color: lightGrey),
+              10.heightBox,
               Column(
                 children: [
                   TextFormField(
