@@ -5,6 +5,15 @@ const appname = "eMart Seller App",
     password = "Password",
     emailHint = 'email@email.com',
     passHint = "* * * * * * *",
+    loginto = 'Login To Your Account',
     forgotPassword = "Forgot Password?",
     anyProblem = "In case of any difficulty, contact administration",
     credit = "@Anshramani";
+
+const dashboard = 'DashBoard',
+    orders = 'Orders',
+    product = 'Products',
+    setting = 'Setting',
+    rating = 'Rating',
+    totalSell = 'Total Sell',
+    popular = "Popular Product";
