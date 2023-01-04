@@ -1,5 +1,8 @@
 import 'package:emart_seller/const/const.dart';
+import 'package:emart_seller/views/home/product_screen/add_product.dart';
+import 'package:emart_seller/views/home/product_screen/product_detail.dart';
 import 'package:emart_seller/views/widget/appbar_widget.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart' as intl;
 import '../../widget/text_style.dart';
 
@@ -11,7 +14,9 @@ class ProductScreen extends StatelessWidget {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
             backgroundColor: purpleColor,
-            onPressed: () {},
+            onPressed: () {
+              Get.to(() => AddProduct());
+            },
             child: Icon(
               Icons.add,
             )),
@@ -23,7 +28,9 @@ class ProductScreen extends StatelessWidget {
             child: Column(
               children: List.generate(20, (index) {
                 return ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => ProductDetail());
+                  },
                   leading: Image.asset(
                     icProduct,
                     width: 100,
@@ -31,7 +38,13 @@ class ProductScreen extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                   title: boldText(text: "Product Title", color: fontGrey),
-                  subtitle: normalText(text: "\$14.0", color: darkGrey),
+                  subtitle: Row(
+                    children: [
+                      normalText(text: "\$14.0", color: darkGrey),
+                      10.widthBox,
+                      boldText(text: "featured", color: green)
+                    ],
+                  ),
                   trailing: VxPopupMenu(
                       child: const Icon(Icons.more_vert_rounded),
                       menuBuilder: () => Column(

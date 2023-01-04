@@ -1,5 +1,7 @@
 import 'package:emart_seller/const/const.dart';
+import 'package:emart_seller/views/home/order_screen/order_detail.dart';
 import 'package:emart_seller/views/widget/appbar_widget.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart' as intl;
 import '../../widget/text_style.dart';
 
@@ -18,7 +20,9 @@ class OrderScreen extends StatelessWidget {
             children: List.generate(20, (index) {
               return ListTile(
                 tileColor: textfieldGrey,
-                onTap: () {},
+                onTap: () {
+                  Get.to(() => const OrderDetail());
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 title: boldText(text: "765567890987654", color: purpleColor),
