@@ -1,14 +1,19 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emart_seller/const/const.dart';
+import 'package:emart_seller/controller/home_controller.dart';
 import 'package:emart_seller/models/category_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:path/path.dart';
 import '../models/category_model.dart';
 
 class ProductController extends GetxController {
+  var isloading = false.obs;
+
   var pNameController = TextEditingController();
   var pDescController = TextEditingController();
   var pPriceController = TextEditingController();
@@ -18,6 +23,7 @@ class ProductController extends GetxController {
   var subcategoryList = <String>[].obs;
 
   List<Category> category = [];
+  var pImagesLinks = [];
   var pImagesList = RxList<dynamic>.generate(3, (index) => null);
 
   var categoryValue = ''.obs;
@@ -61,5 +67,40 @@ class ProductController extends GetxController {
     }
   }
 
-  uploadImage() async {}
+  uploadImage() async {
+    pImagesLinks.clear();
+    for (var item in pImagesList) {
+      if (item != null) {
+        var filename = basename(item.path);
+        var destination = 'images/vendors/${currentUser!.uid}/$filename';
+        Reference ref = FirebaseStorage.instance.ref().child(destination);
+        await ref.putFile(item);
+        var n = await ref.getDownloadURL();
+        pImagesLinks.add(n);
+      }
+    }
+  }
+
+  uploadProduct(context) async {
+    var store = firestore.collection(productCollection).doc();
+    await store.set({
+      'is_featured': false,
+      'p_categories': categoryValue.value,
+      'p_subcategories': subcategoryValue.value,
+      'p_color':
+          FieldValue.arrayUnion([Colors.red.value, Colors.white24.value]),
+      'p_images': FieldValue.arrayUnion(pImagesLinks),
+      'p_wishlist': FieldValue.arrayUnion([]),
+      'p_description': pDescController.text,
+      'p_name': pNameController.text,
+      'p_prices': pPriceController.text,
+      'p_quentity': pQuentityController.text,
+      'p_seller': Get.find<HomeController>().userName,
+      'p_rating': '5.0',
+      'vendor_id': currentUser!.uid,
+      'featured_id': ''
+    });
+    isloading(false);
+    VxToast.show(context, msg: "Product Upload");
+  }
 }

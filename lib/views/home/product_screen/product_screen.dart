@@ -74,14 +74,22 @@ class ProductScreen extends StatelessWidget {
                           menuBuilder: () => Column(
                               children: List.generate(
                                   popupMenuTitle.length,
-                                  (index) => Padding(
+                                  (i) => Padding(
                                         padding: const EdgeInsets.all(12.0),
                                         child: Row(
                                           children: [
-                                            Icon(popupMenuIconList[index]),
+                                            Icon(
+                                              popupMenuIconList[i],
+                                              color: data[index]
+                                                              ['featured_id'] ==
+                                                          currentUser!.uid &&
+                                                      i == 0
+                                                  ? green
+                                                  : darkGrey,
+                                            ),
                                             10.widthBox,
                                             normalText(
-                                                text: popupMenuTitle[index],
+                                                text: popupMenuTitle[i],
                                                 color: darkGrey)
                                           ],
                                         ).onTap(() {}),
