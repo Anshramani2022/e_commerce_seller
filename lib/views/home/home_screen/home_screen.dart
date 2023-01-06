@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                 return ListTile(
                   onTap: () {},
                   leading: Image.asset(
-                    icProduct,
+                    imgProduct,
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,

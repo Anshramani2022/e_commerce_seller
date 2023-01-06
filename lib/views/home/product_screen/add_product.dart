@@ -1,14 +1,18 @@
 import 'package:emart_seller/const/const.dart';
+import 'package:emart_seller/controller/product_controller.dart';
 import 'package:emart_seller/views/home/product_screen/component/product_drop_down.dart';
 import 'package:emart_seller/views/home/product_screen/component/product_images.dart';
 import 'package:emart_seller/views/widget/common_textfield.dart';
 import 'package:emart_seller/views/widget/text_style.dart';
+import 'package:get/get.dart';
 
 class AddProduct extends StatelessWidget {
   const AddProduct({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.find<ProductController>();
+
     return Scaffold(
       backgroundColor: purpleColor,
       appBar: AppBar(
@@ -27,24 +31,54 @@ class AddProduct extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              customTextField(hint: "eg. BMW", label: "Product Name"),
+              customTextField(
+                  hint: "eg. BMW",
+                  label: "Product Name",
+                  ispass: false,
+                  controller: controller.pNameController),
               10.heightBox,
               customTextField(
-                  hint: "eg. Nice Product", label: "Description", isdesc: true),
+                  hint: "eg. Nice Product",
+                  label: "Description",
+                  isdesc: true,
+                  ispass: false,
+                  controller: controller.pDescController),
               10.heightBox,
-              customTextField(hint: "eg. \$100", label: "Price"),
+              customTextField(
+                  hint: "eg. \$100",
+                  label: "Price",
+                  ispass: false,
+                  controller: controller.pPriceController),
               10.heightBox,
-              customTextField(hint: "eg. Quentity", label: "Quentity"),
+              customTextField(
+                  hint: "eg. Quentity",
+                  label: "Quentity",
+                  ispass: false,
+                  controller: controller.pQuentityController),
               10.heightBox,
-              ProductDropdown(),
+              ProductDropdown("Category", controller.categoryList,
+                  controller.categoryValue, controller),
               10.heightBox,
-              ProductDropdown(),
+              ProductDropdown("SubCategory", controller.subcategoryList,
+                  controller.subcategoryValue, controller),
               10.heightBox,
               normalText(text: "Choose Product images"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(
-                    3, (index) => ProductImages(label: "${index + 1}")),
+              Obx(
+                () => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(
+                      3,
+                      (index) => controller.pImagesList[index] != null
+                          ? Image.file(
+                              controller.pImagesList[index],
+                              fit: BoxFit.fill,
+                            ).box.size(100, 100).roundedSM.make().onTap(() {
+                              controller.pickImage(index, context);
+                            })
+                          : ProductImages(label: "${index + 1}").onTap(() {
+                              controller.pickImage(index, context);
+                            })),
+                ),
               ),
               5.heightBox,
               normalText(
@@ -53,25 +87,32 @@ class AddProduct extends StatelessWidget {
               5.heightBox,
               normalText(text: "choose product color", color: lightGrey),
               5.heightBox,
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: List.generate(
-                    9,
-                    (index) => Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            VxBox()
-                                .color(Vx.randomPrimaryColor)
-                                .roundedFull
-                                .size(50, 50)
-                                .make(),
-                            Icon(
-                              Icons.done,
-                              color: white,
-                            )
-                          ],
-                        )),
+              Obx(
+                () => Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  children: List.generate(
+                      colorUtil.length,
+                      (index) => Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: [
+                              VxBox()
+                                  .color(colorUtil[index])
+                                  .roundedFull
+                                  .size(50, 50)
+                                  .make()
+                                  .onTap(() {
+                                controller.selectedColorIndex.value = index;
+                              }),
+                              controller.selectedColorIndex.value == index
+                                  ? Icon(
+                                      Icons.done,
+                                      color: white,
+                                    )
+                                  : SizedBox()
+                            ],
+                          )),
+                ),
               )
             ],
           ),

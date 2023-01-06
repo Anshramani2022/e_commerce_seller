@@ -6,7 +6,7 @@ AppBar appBarWidget({title}) {
   return AppBar(
     backgroundColor: Colors.white,
     automaticallyImplyLeading: false,
-    title: normalText(text: product, size: 18.0, color: fontGrey),
+    title: normalText(text: title, size: 18.0, color: fontGrey),
     actions: [
       Center(
         child: boldText(

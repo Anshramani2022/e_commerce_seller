@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
       const HomeScreen(),
       const ProductScreen(),
       const OrderScreen(),
-      const ProfileScreen(),
+      ProfileScreen(),
     ];
 
     var navBarItem = [

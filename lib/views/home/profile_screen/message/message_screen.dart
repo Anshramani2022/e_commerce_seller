@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emart_seller/const/const.dart';
+import 'package:emart_seller/services/store_services.dart';
 import 'package:emart_seller/views/home/profile_screen/message/chat_screen.dart';
+import 'package:emart_seller/views/widget/loading_indicator.dart';
 import 'package:emart_seller/views/widget/text_style.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 
 class MessageScreen extends StatelessWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -9,32 +13,51 @@ class MessageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: boldText(text: message, size: 18.0, color: fontGrey),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: List.generate(
-            20,
-            (index) => ListTile(
-              onTap: () {
-                Get.to(() => const ChatScreen());
-              },
-              leading: const CircleAvatar(
-                backgroundColor: purpleColor,
-                child: Icon(
-                  Icons.person,
-                  color: white,
-                ),
-              ),
-              title: boldText(text: "Username", color: fontGrey),
-              subtitle: normalText(text: "Last msg", color: darkGrey),
-              trailing: normalText(text: "10:45 PM", color: darkGrey),
-            ),
-          ),
+        appBar: AppBar(
+          title: boldText(text: message, size: 18.0, color: fontGrey),
         ),
-      ),
-    );
+        body: StreamBuilder(
+          stream: StoreServices.getMessage(currentUser!.uid),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return loadingIndicator();
+            } else {
+              var data = snapshot.data!.docs;
+              return SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: List.generate(
+                    data.length,
+                    (index) {
+                      var t = data[index]['created_on'] == null
+                          ? DateTime.now()
+                          : data[index]['created_on'].toDate();
+                      var time = intl.DateFormat("h:mma").format(t);
+                      return ListTile(
+                        onTap: () {
+                          Get.to(() => const ChatScreen());
+                        },
+                        leading: CircleAvatar(
+                          backgroundColor: purpleColor,
+                          child: Icon(
+                            Icons.person,
+                            color: white,
+                          ),
+                        ),
+                        title: boldText(
+                            text: "${data[index]['sender_name']}",
+                            color: fontGrey),
+                        subtitle: normalText(
+                            text: "${data[index]['last_msg']}",
+                            color: darkGrey),
+                        trailing: normalText(text: time, color: darkGrey),
+                      );
+                    },
+                  ),
+                ),
+              );
+            }
+          },
+        ));
   }
 }
