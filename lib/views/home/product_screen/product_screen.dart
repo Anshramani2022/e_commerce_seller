@@ -89,10 +89,44 @@ class ProductScreen extends StatelessWidget {
                                             ),
                                             10.widthBox,
                                             normalText(
-                                                text: popupMenuTitle[i],
+                                                text:
+                                                    data[index]['featured_id'] ==
+                                                                currentUser!
+                                                                    .uid &&
+                                                            i == 0
+                                                        ? "Remove Featured"
+                                                        : popupMenuTitle[i],
                                                 color: darkGrey)
                                           ],
-                                        ).onTap(() {}),
+                                        ).onTap(() {
+                                          switch (i) {
+                                            case 0:
+                                              if (data[index]['is_featured'] ==
+                                                  true) {
+                                                controller.removefeatured(
+                                                    data[index].id);
+                                                VxToast.show(context,
+                                                    msg: "Removed");
+                                              } else {
+                                                controller.addfeatured(
+                                                    data[index].id);
+                                                VxToast.show(context,
+                                                    msg: "Added");
+                                              }
+                                              break;
+
+                                            case 1:
+                                              break;
+
+                                            case 2:
+                                              controller.removeProduct(
+                                                  data[index].id);
+                                              VxToast.show(context,
+                                                  msg: "Product Removed");
+
+                                              break;
+                                          }
+                                        }),
                                       ))).box.white.rounded.width(200).make(),
                           clickType: VxClickType.singleClick),
                     );

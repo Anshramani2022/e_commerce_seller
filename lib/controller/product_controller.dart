@@ -103,4 +103,19 @@ class ProductController extends GetxController {
     isloading(false);
     VxToast.show(context, msg: "Product Upload");
   }
+
+  addfeatured(docId) async {
+    await firestore.collection(productCollection).doc(docId).set(
+        {'featured_id': currentUser!.uid, 'is_featured': true},
+        SetOptions(merge: true));
+  }
+
+  removefeatured(docId) async {
+    await firestore.collection(productCollection).doc(docId).set(
+        {'featured_id': '', 'is_featured': false}, SetOptions(merge: true));
+  }
+
+  removeProduct(docId) async {
+    await firestore.collection(productCollection).doc(docId).delete();
+  }
 }
